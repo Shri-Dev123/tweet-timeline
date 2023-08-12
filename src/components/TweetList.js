@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import Tweet from "./Tweet";
 import DateRangeFilter from "./DateRangeFilter";
@@ -16,6 +16,7 @@ const TweetList = () => {
     });
     const [currentPage, setCurrentPage] = useState(0);
     const tweetsPerPage = 8;
+    const paginationRef = useRef(null);
 
     useEffect(() => {
         axios
@@ -41,11 +42,18 @@ const TweetList = () => {
         }
 
         setFilteredTweets(filtered);
-        setCurrentPage(0); // Reset the current page when filtering
+        setCurrentPage(0);
     }, [dateRange, tweets]);
 
     const handlePageChange = ({ selected }) => {
         setCurrentPage(selected);
+    };
+
+    const scrollToTop = () => {
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth",
+        });
     };
 
     const offset = currentPage * tweetsPerPage;
@@ -64,8 +72,12 @@ const TweetList = () => {
             </div>
 
             <ReactPaginate
+                ref={paginationRef}
+                onPageChange={(selectedItem) => {
+                    handlePageChange(selectedItem);
+                    scrollToTop();
+                }}
                 pageCount={Math.ceil(filteredTweets.length / tweetsPerPage)}
-                onPageChange={handlePageChange}
                 containerClassName="pagination flex gap-4 m-4 text-xl"
                 activeClassName="active text-blue-500 text-2xl font-semibold"
             />

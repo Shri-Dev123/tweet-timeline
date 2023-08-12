@@ -1,4 +1,3 @@
-// src/components/Tweet.js
 import React, { useState } from "react";
 import LikeButton from "./LikeButton";
 
