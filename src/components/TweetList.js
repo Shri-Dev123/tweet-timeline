@@ -4,7 +4,8 @@ import Tweet from "./Tweet";
 import DateRangeFilter from "./DateRangeFilter";
 import ReactPaginate from "react-paginate";
 
-const API_URL = "http://www.mocky.io/v2/5d1ef97d310000552febe99d";
+const API_URL =
+    "https://cors-anywhere.herokuapp.com/http://www.mocky.io/v2/5d1ef97d310000552febe99d";
 
 const TweetList = () => {
     const [tweets, setTweets] = useState([]);
