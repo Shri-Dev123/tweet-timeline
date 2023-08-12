@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Tweet from "./Tweet";
 import DateRangeFilter from "./DateRangeFilter";
-import ReactPaginate from "react-paginate"; // Import the react-paginate component
+import ReactPaginate from "react-paginate";
 
 const API_URL = "http://www.mocky.io/v2/5d1ef97d310000552febe99d";
 
@@ -21,7 +21,6 @@ const TweetList = () => {
             .get(API_URL)
             .then((response) => {
                 setTweets(response.data);
-                setFilteredTweets(response.data);
             })
             .catch((error) => {
                 console.error("Error fetching tweets:", error);
@@ -29,18 +28,19 @@ const TweetList = () => {
     }, []);
 
     useEffect(() => {
+        let filtered = [...tweets];
+
         if (dateRange.startDate && dateRange.endDate) {
-            const filtered = tweets.filter((tweet) => {
+            filtered = filtered.filter((tweet) => {
                 const tweetDate = new Date(tweet.publishedDate);
-                return (
-                    tweetDate >= dateRange.startDate &&
-                    tweetDate <= dateRange.endDate
-                );
+                const startDate = new Date(dateRange.startDate);
+                const endDate = new Date(dateRange.endDate);
+                return tweetDate >= startDate && tweetDate <= endDate;
             });
-            setFilteredTweets(filtered);
-        } else {
-            setFilteredTweets(tweets);
         }
+
+        setFilteredTweets(filtered);
+        setCurrentPage(0); // Reset the current page when filtering
     }, [dateRange, tweets]);
 
     const handlePageChange = ({ selected }) => {
